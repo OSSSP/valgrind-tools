@@ -7,7 +7,15 @@ MAINTAINER Deby Katz
 
 RUN echo "deb http://us.archive.ubuntu.com/ubuntu/ trusty universe" >> /etc/apt/sources.list
 RUN apt-get -y update
-RUN apt-get install -y automake make autoconf git g++ libc6-dbg
+RUN apt-get --no-install-recommends install -y automake make autoconf git g++ libc6-dbg \
+    && apt-get clean \
+    && rm -rf \
+        /var/lib/apt/lists/* \
+        /tmp/* \
+        /var/tmp/* \
+        /usr/share/man \
+        /usr/share/doc \
+        /usr/share/doc-base
 
-RUN cd $HOME; git clone https://github.com/squaresLab/valgrind-tools.git
+RUN cd $HOME; git clone https://github.com/osssp/valgrind-tools.git
 RUN cd $HOME/valgrind-tools ; ./autogen.sh ; ./configure --prefix=$HOME/valgrind-bin; make install
